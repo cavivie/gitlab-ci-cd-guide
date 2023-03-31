@@ -1,0 +1,25 @@
+stages:
+  - build
+  - pages
+
+.default:
+  images: "node:alpine"
+  interruptible: true
+  tags: [linux, docker]
+
+build:
+  stage: build
+  script:
+    - npm install
+    - slidev build
+  artifacts:
+    paths:
+      - dist/
+
+pages:
+  stage: pages
+  script:
+    - mv dist/ public/
+  artifacts:
+    paths:
+    - public
