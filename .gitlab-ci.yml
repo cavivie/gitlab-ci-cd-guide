@@ -20,7 +20,7 @@ setup:
 build:
   stage: build
   script:
-    - npm run build --base $CI_PROJECT_NAME
+    - npm run build -- --base $CI_PROJECT_NAME
   artifacts:
     paths:
       - dist/
