@@ -1,5 +1,5 @@
 stages:
-  - prepare
+  - setup
   - build
   - deploy
 
@@ -12,8 +12,8 @@ cache:
   paths:
     - node_modules/
 
-prepare:
-  stage: prepare
+setup:
+  stage: .pre
   script:
     - npm install
 
