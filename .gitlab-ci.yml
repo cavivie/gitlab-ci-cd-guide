@@ -8,13 +8,14 @@ default:
   interruptible: true
   tags: [linux, docker]
 
+cache:
+  paths:
+    - node_modules/
+
 prepare:
   stage: prepare
   script:
     - npm install
-  artifacts:
-    paths:
-      - node_modules
 
 build:
   stage: build
@@ -24,7 +25,7 @@ build:
     paths:
       - dist/
 
-deploy:
+pages:
   stage: deploy
   script:
     - mv dist/ public/
