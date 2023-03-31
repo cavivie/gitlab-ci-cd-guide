@@ -1,23 +1,31 @@
 stages:
+  - prepare
   - build
-  - pages
+  - deploy
 
 default:
   image: "node:alpine"
   interruptible: true
   tags: [linux, docker]
 
+prepare:
+  stage: prepare
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules
+
 build:
   stage: build
   script:
-    - npm install
-    - slidev build
+    - npm build
   artifacts:
     paths:
       - dist/
 
-pages:
-  stage: pages
+deploy:
+  stage: deploy
   script:
     - mv dist/ public/
   artifacts:
