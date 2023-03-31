@@ -3,7 +3,7 @@ stages:
   - pages
 
 .default:
-  images: "node:alpine"
+  image: "node:alpine"
   interruptible: true
   tags: [linux, docker]
 
