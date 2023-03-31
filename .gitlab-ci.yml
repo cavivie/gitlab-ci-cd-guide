@@ -19,7 +19,7 @@ prepare:
 build:
   stage: build
   script:
-    - npm build
+    - npm run build
   artifacts:
     paths:
       - dist/
