@@ -2,7 +2,7 @@ stages:
   - build
   - pages
 
-.default:
+default:
   image: "node:alpine"
   interruptible: true
   tags: [linux, docker]
