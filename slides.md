@@ -34,7 +34,6 @@ Speaker：Weibiao Tu
   </span>
 </div>
 
-
 ---
 
 # GitLab CI/CD 是什么?
@@ -71,14 +70,17 @@ h1 {
 *Pipeline*是持续集成、交付和部署的顶级组件。
 
 *Pipeline*包括：
+
 - **Job** - 作业，定义要做什么。例如，编译或测试代码的作业。
 - **Stage** - 阶段，定义何时运行作业。例如，在编译代码的阶段之后运行测试的阶段。
 
 *Job*由*Runner*执行。如果有足够的并发运行程序，那么同一阶段中的多个作业将并行执行：
+
 - 如果一个阶段中的所有作业都成功，则*Pipeline*将进入下一个阶段。
 - 如果一个阶段中的有任何作业失败，则下一个阶段（通常）不会执行，并且*Pipeline*提前结束。
 
 一个典型的*Pipeline*可能由四个阶段组成，按以下顺序执行：
+
 - **build** - 包含一个*compile*的作业。
 - **test** - 包含多个*test*的作业。
 - **staging** - 包含一个名为*deploy to stage*的作业。
@@ -88,290 +90,71 @@ h1 {
 
 # Runner & Executor
 
-*Runner*是在流水线中运行作业的应用，与GitLab CI/CD配合运作。*Runner*既可以在Host中运行，也可以在Docker Container内运行。
+*Runner*是在流水线中运行作业的应用，与 GitLab CI/CD 配合运作。*Runner*既可以在 Host 中运行，也可以在 Docker Container 内运行。
 
-*Runner*是运行来自GitLab 的 CI/CD 作业的代理，在GitLab实例和安装了GitLab Runner的机器之间建立通信。
+*Runner*是运行来自 GitLab 的 CI/CD 作业的代理，在 GitLab 实例和安装了 GitLab Runner 的机器之间建立通信。
 根据您想要允许访问的用户，分为三种类型的 Runner：
+
 - **Shared Runner** - 允许所有项目使用。
 - **Group Runner** - 允许指定群组下的所有项目和子组使用。
 - **Project Runner** - 允许指定的个人项目使用。
 
 *Executor*是在流水线中运行作业的最终执行者，注册*Runner*时，必须选择一个执行器。
 *Executor*执行器决定每个作业运行的环境，例如：
-- 如果您想要 CI/CD 作业运行 Powershell 命令，则可以在 Windows 服务器上安装极狐GitLab Runner，然后注册使用 Shell 执行器的*Runner*
-- 如果您想要 CI/CD 作业在自定义 Docker 容器中运行命令，您可以在 Linux 服务器上安装极狐GitLab Runner，然后注册使用 Docker 执行器的 Runner。
+
+- 如果您想要 CI/CD 作业运行 Powershell 命令，则可以在 Windows 服务器上安装极狐 GitLab Runner，然后注册使用 Shell 执行器的*Runner*
+- 如果您想要 CI/CD 作业在自定义 Docker 容器中运行命令，您可以在 Linux 服务器上安装极狐 GitLab Runner，然后注册使用 Docker 执行器的 Runner。
 
 ---
 
-# Code
+# Variable 变量
 
-Use code snippets and get the highlighting directly![^1]
+CI/CD 变量是一种环境变量。 可以将它们用于：
 
-```ts {all|2|1-6|9|all}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
+- 控制作业和流水线。
+- 存储要重复使用的值。
+- 避免在您的 .gitlab-ci.yml 文件中硬编码值。
 
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = { ...user, ...update }
-  saveUser(id, newUser)
-}
-```
+变量类型：
 
-<arrow v-click="3" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<style>
-.footnotes-sep {
-  @apply mt-20 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
+- _Predefined Variable_ - 预定义变量，包含有关作业、流水线的触发和运行信息，所有作业可用
+- _Global Variable_ - 全局变量，在顶层使用 variables 关键字定义，所有作业可用
+- _Job Variable_ - 作业变量，在作业中使用 variables 关键字定义，仅作业可用
+- _Project Variable_ - 项目变量，在项目 CI/CD-Variables 设置中添加，仅该项目可用
+- _Group Variable_ - 群组变量，在群组 CI/CD-Variables 设置中添加，该群组下所有项目可用
+- _Instance Variable_ - 实例变量，在 Admin CI/CD-Variables 设置中添加，该实例的群组和所有项目可用
 
 ---
 
-# Components
+# Variable 变量使用 1
 
-<div grid="~ cols-2 gap-4">
-<div>
+变量使用：
 
-You can use Vue components directly inside your slides.
+- GitLab 端，在 .gitlab-ci.yml 中。
+- GitLab Runner 端，在 config.toml 中。
 
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
+扩展机制：
 
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="-t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-preload: false
----
-
-# Animations
-
-Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
-```
-
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
-</div>
+- GitLab 端
+- GitLab Runner
+- 执行 shell 环境
 
 ---
 
-# LaTeX
+# Variable 变量使用 2
 
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
+注意事项：
 
-<br>
+- 在作业中屏蔽全局变量时，请使用 variables: {}，而不是 unset 或者覆盖它
+- 在作业中根据条件覆盖已声明的全局变量并且仍然需要作用域为全局时，需要在 workflow 中重新声明以覆盖
+- 在 Script 中使用变量时，export/unset 变量并不能按照预期覆盖或删除全局变量，仅该 Script 有作用
+- 在.gitlab-ci.yml 文件中使用变量，要多尝试，文档可能为直观表明，例如 artifacts:path 中使用
+- 在不同的关键字中使用变量，变量的展开机制可能会不同，需要先查明变量的展开方式，避免出现副作用
+- 展开可能发声在作业之前，如 Runner 尝试将变量展开传递给作业，也可能发生在作业运行时如 Script 动态
+- 嵌套地定义变量时，Runner 按照定义顺序依次展开变量，需要定义好变量的顺序，避免发生空值等异常值
 
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
-<br>
-
-[Learn more](https://sli.dev/guide/syntax#latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-3 gap-10 pt-4 -mb-6">
-
-```mermaid {scale: 0.5}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
-
-
----
-layout: center
-class: text-center
 ---
 
 # Learn More
 
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
+[GitLab](https://docs.gitlab.cn/jh/ci/)
